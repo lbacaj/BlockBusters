@@ -1,0 +1,102 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio code coverage results
+*.coverage
+*.coveragexml
+
+# Visual Studio temporary files
+*.tmp
+*.temp
+*.tfignore
+
+# Visual Studio files
+.vs/
+*.njsproj
+*.sln
+*.csproj
+*.vbproj
+*.fsproj
+*.sqlproj
+*.esproj
+*.sfproj
+*.swp
+
+# Rider files
+.idea/
+*.sln.iml
+
+# Dotnet local tool manifest
+.config/dotnet-tools.json
+
+# Environment files
+.env
+appsettings.Development.json
+secrets.json
+user-secrets/
+
+# IDE settings
+.vscode/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+Data/leaderboard.db
+
+# Publish folder
+Publish/
+publish/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# Windows Installer files
+*.msi
+*.msm
+*.msp
+
+# ClickOnce directory
+**/publish/
+
+# Node.js build outputs
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+coverage/
+
+# Other
+*.zip
+*.rar
+*.7z

@@ -1,0 +1,234 @@
+/* Basic container to center content */
+.container {
+  width: 100%;
+  padding-right: 15px; /* Adjust as needed */
+  padding-left: 15px;  /* Adjust as needed */
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Add max-widths for different breakpoints (optional, but common) */
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* =============================
+   Global styles
+   ============================= */
+
+   #gameContainer {
+    background-color: #222;
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    z-index: 1;
+  }
+  
+  #scoreDisplay {
+    font-weight: bold;
+    color: #d22; /* example color */
+  }
+  
+  #messageArea {
+    color: red;
+    font-weight: bold;
+  }
+  
+  /* Game Jam Button Styling */
+  #jamButton {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+  }
+  
+  #jamButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  #githubButton { /* General styles for GitHub button */
+    display: inline-block; /* Prevent stretching on desktop */
+    width: auto; /* Ensure it only takes necessary width */
+    /* other desktop-specific styles can go here if needed */
+  }
+
+  #topRightUIContent { /* Desktop alignment adjustment */
+    padding-top: 0.3rem; /* Push content down slightly on desktop */
+  }
+  
+  /* =============================
+     "Bootstrap-like" utility classes
+     ============================= */
+  
+  .d-none {
+    display: none !important;
+  }
+  
+  @media (min-width: 576px) {
+    .d-none.d-sm-block {
+      display: block !important;
+    }
+    .d-none.d-sm-flex {
+      display: flex !important;
+    }
+    .d-sm-none {
+      display: none !important;
+    }
+  }
+  
+  /* =============================
+     Desktop-specific
+     ============================= */
+  
+  #desktop-buttons {
+    margin-bottom: 10px;
+  }
+  
+  #desktop-buttons button {
+    margin-right: 8px;
+  }
+  
+  /* =============================
+     Mobile responsive (<576px)
+     ============================= */
+  @media (max-width: 576px) {
+  
+    /* Keep container plain, so fixed elements truly pin to top-right */
+    #gameUI .container {
+      padding-left: 10px;
+      padding-right: 10px;
+      /* NO transform scale here */
+    }
+  
+    /* Make title ~20% smaller on mobile */
+    #gameUI h2 {
+      font-size: 1.2rem; /* was around 1.5rem or 2rem */
+    }
+  
+    #gameUI .row {
+      margin-left: -5px;
+      margin-right: -5px;
+    }
+  
+    /* Pin the "by Louie" + jam button top-right AND shrink them */
+    #topRightUIContent { /* Changed selector from .col-sm-5.col-md-6.text-end */
+      position: fixed !important;
+      top: 34px !important; /* Increased from 30px to lower further */
+      right: 18px !important; /* Decreased from 20px */
+      width: auto !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      z-index: 9999 !important;
+  
+      transform: scale(0.75); 
+      transform-origin: top right;
+    }
+  
+    /* Make the <small> text smaller within the new ID */
+    #topRightUIContent small {
+      font-size: 0.75rem; /* about 20-25% smaller than default */
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+  
+    /* Shrink jam button ~20% */
+    #jamButton {
+      font-size: 10px;    /* was 11px */
+      padding: 3px 6px;   /* smaller padding */
+      margin-top: 3px;
+    }
+
+    #githubButton {
+      display: block; /* Ensure it's on its own line on mobile */
+      font-size: 9px; /* Adjusted for mobile */
+      padding: 3px 6px; /* Adjusted for mobile */
+      margin-top: 8px; /* Increased from 5px for more space */
+    }
+  
+    /* Mobile "restart" & "leaderboard" buttons pinned left */
+    .game-ui.buttons-container.d-sm-none {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 10px; /* Reduced from 15px */
+  
+      position: absolute !important;
+      top: 55px !important; /* Moved up from 80px to be closer to logo */
+      left: 20px !important;
+      bottom: auto !important;
+      transform: scale(0.7) !important; /* Added scale to make 30% smaller */
+      transform-origin: top left !important; /* Ensure scaling from top left */
+    }
+  
+    /* Shrink these action buttons by ~30% */
+    .game-ui.buttons-container button {
+      font-size: 10px; /* Reduced from 12px */
+      padding: 6px 9px; /* Reduced from 8px 12px */
+    }
+  
+    /* Score display can be scaled a bit smaller if you like */
+    .game-ui.score-display {
+      transform: scale(0.8);
+      transform-origin: top center;
+    }
+  }
+  
+  /* =============================
+     Very small screens (<360px)
+     ============================= */
+  @media (max-width: 360px) {
+    #gameUI h2 {
+      font-size: 1rem;  /* even smaller if desired */
+    }
+    #gameUI small {
+      font-size: 0.65rem;
+    }
+    #gameUI .col-sm-7,
+    #gameUI .col-sm-5 {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+  
+  /* =============================
+     iOS-specific adjustments
+     ============================= */
+  @supports (-webkit-touch-callout: none) {
+    @media (max-width: 576px) {
+      /* Make buttons same size on iOS as on other mobile devices */
+      .game-ui.buttons-container {
+        transform: scale(0.7) !important;
+        transform-origin: top left !important;
+      }
+  
+      .game-ui.score-display {
+        /* Keep the same scale as on other devices */
+        transform: scale(0.8);
+      }
+  
+      /* If there's a rotate button somewhere, scale it too: */
+      button[style*="borderRadius: 50%"] {
+        right: 10px !important;
+      }
+    }
+  }

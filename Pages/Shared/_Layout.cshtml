@@ -1,0 +1,51 @@
+﻿﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BlockPuzzleGame</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BlockPuzzleGame.styles.css" asp-append-version="true" />
+
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="Play Block Busters, a fun drop the block puzzle game." />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}")" />
+    <meta property="og:title" content="@ViewData["Title"] - Block Busters" />
+    <meta property="og:description" content="Play Block Busters, a fun drop the block puzzle game." />
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/images/BlockBusters.png")" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}")" />
+    <meta property="twitter:title" content="@ViewData["Title"] - Block Busters" />
+    <meta property="twitter:description" content="Play Block Busters, a fun drop the block puzzle game." />
+    <meta property="twitter:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/images/BlockBusters.png")" />
+
+
+    <!-- Lightweight Analytics – accurate & simple analytics at half the price -->
+    <script defer src="https://cdn.lightweightanalytics.com/script.min.js" data-siteid="d65839c3-1dfa-4f3f-a0e5-0696a62d6155" data-c_mode="true" data-l_ping="true"></script>
+    <!-- / Lightweight Analytics -->
+</head>
+<body>
+    <header>
+        <nav>
+            <!-- Your nav stuff -->
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <!-- Your footer stuff -->
+    </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

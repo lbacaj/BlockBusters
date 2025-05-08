@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save Score Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a2e;
+            color: white;
+        }
+        h1 {
+            color: #4fc3f7;
+        }
+        .test-container {
+            background-color: rgba(30, 30, 50, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        button {
+            background-color: #81c784;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #5a9d5a;
+        }
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #2a2a40;
+            color: white;
+            width: 200px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgba(20, 20, 35, 0.5);
+            min-height: 50px;
+            white-space: pre-wrap;
+        }
+        .log {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Save Score Test</h1>
+    
+    <div class="test-container">
+        <h2>Test Anti-Forgery Token Fix</h2>
+        
+        @Html.AntiForgeryToken()
+        
+        <div>
+            <label for="playerName">Player Name:</label>
+            <input type="text" id="playerName" value="TestPlayer">
+        </div>
+        <div>
+            <label for="scoreInput">Score:</label>
+            <input type="number" id="scoreInput" value="500">
+        </div>
+        
+        <button id="saveScoreButton">Save Score</button>
+        
+        <div class="result" id="result">Results will appear here...</div>
+        
+        <h3>Console Log</h3>
+        <div class="log" id="logOutput"></div>
+    </div>
+    
+    <script>
+    // Log wrapper to show logs in UI
+    const originalConsoleLog = console.log;
+    const originalConsoleError = console.error;
+    
+    console.log = function() {
+        const args = Array.from(arguments);
+        const logOutput = document.getElementById('logOutput');
+        const logLine = document.createElement('div');
+        logLine.textContent = args.map(arg => 
+            typeof arg === 'object' ? JSON.stringify(arg) : arg
+        ).join(' ');
+        logOutput.appendChild(logLine);
+        originalConsoleLog.apply(console, args);
+    };
+    
+    console.error = function() {
+        const args = Array.from(arguments);
+        const logOutput = document.getElementById('logOutput');
+        const logLine = document.createElement('div');
+        logLine.textContent = '❌ ERROR: ' + args.map(arg => 
+            typeof arg === 'object' ? JSON.stringify(arg) : arg
+        ).join(' ');
+        logLine.style.color = '#e57373';
+        logOutput.appendChild(logLine);
+        originalConsoleError.apply(console, args);
+    };
+    
+    // Our fixed saveScore function
+    async function saveScore(playerName, score) {
+      try {
+        // Get anti-forgery token
+        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+        if (!tokenElement) {
+          console.error('Anti-forgery token not found');
+          return null;
+        }
+        
+        const token = tokenElement.value;
+        console.log('Saving score with token:', token);
+        
+        const response = await fetch('/Index?handler=SaveScore', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'RequestVerificationToken': token
+          },
+          body: JSON.stringify({
+            PlayerName: playerName,
+            Score: score
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Error saving score: ${response.status}`);
+        }
+        
+        // Parse and return updated leaderboard
+        const updatedLeaderboard = await response.json();
+        return updatedLeaderboard;
+      } catch (error) {
+        console.error('Failed to save score:', error);
+        return null;
+      }
+    }
+    
+    // Connect button click
+    document.getElementById('saveScoreButton').addEventListener('click', async () => {
+        const playerName = document.getElementById('playerName').value;
+        const score = parseInt(document.getElementById('scoreInput').value);
+        
+        document.getElementById('result').textContent = 'Saving score...';
+        console.log(`Attempting to save score for ${playerName}: ${score}`);
+        
+        try {
+            const result = await saveScore(playerName, score);
+            if (result) {
+                document.getElementById('result').textContent = 'Success! Leaderboard: ' + JSON.stringify(result, null, 2);
+                console.log('Score saved successfully');
+            } else {
+                document.getElementById('result').textContent = 'Failed to save score. See console log for details.';
+            }
+        } catch (err) {
+            document.getElementById('result').textContent = 'Error: ' + err.message;
+            console.error('Error in save button handler:', err);
+        }
+    });
+    </script>
+</body>
+</html>

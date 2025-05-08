@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Score Submission Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a2e;
+            color: white;
+        }
+        h1 {
+            color: #4fc3f7;
+        }
+        form {
+            background-color: #2a2a4a;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #4fc3f7;
+            background-color: #1a1a2e;
+            color: white;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4fc3f7;
+            color: #1a1a2e;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #81d4fa;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #2a2a4a;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            border-left: 5px solid #81c784;
+        }
+        .error {
+            border-left: 5px solid #e57373;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Score Submission</h1>
+    <p>This page tests the score submission functionality with regular form submission.</p>
+
+    <form id="scoreForm" action="/Index?handler=SaveScore" method="POST">
+        <!-- The antiforgery token will be inserted here -->
+        
+        <div class="form-group">
+            <label for="playerName">Player Name:</label>
+            <input type="text" id="playerName" name="PlayerName" required value="TestPlayer">
+        </div>
+        
+        <div class="form-group">
+            <label for="score">Score:</label>
+            <input type="number" id="score" name="Score" required value="500">
+        </div>
+        
+        <button type="submit">Save Score</button>
+    </form>
+
+    <div id="result" class="result">
+        <h3>Result:</h3>
+        <pre id="resultContent"></pre>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Fetch the anti-forgery token
+        const response = await fetch('/');
+        const html = await response.text();
+        
+        // Extract the token
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const tokenInput = doc.querySelector('input[name="__RequestVerificationToken"]');
+        
+        if (tokenInput) {
+            // Create a hidden input for the token
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = '__RequestVerificationToken';
+            input.value = tokenInput.value;
+            
+            // Add it to the form
+            document.getElementById('scoreForm').prepend(input);
+            console.log('Anti-forgery token added:', tokenInput.value);
+        } else {
+            console.error('Could not find anti-forgery token');
+        }
+        
+        // Handle form submission
+        document.getElementById('scoreForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const playerName = document.getElementById('playerName').value;
+            const score = parseInt(document.getElementById('score').value);
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            
+            // Log the values we're submitting
+            console.log('Submitting:', { playerName, score, token });
+            
+            try {
+                // Try to log the exact payload we're sending
+                const payload = {
+                    PlayerName: playerName,
+                    Score: parseInt(score)
+                };
+                
+                console.log('Raw request payload:', payload);
+                const jsonPayload = JSON.stringify(payload);
+                console.log('Stringified payload:', jsonPayload);
+                
+                const response = await fetch('/Index?handler=SaveScore', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: jsonPayload
+                });
+                
+                // Log the response status
+                console.log('Response status:', response.status);
+                
+                const resultDiv = document.getElementById('result');
+                const resultContent = document.getElementById('resultContent');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.className = 'result success';
+                    resultContent.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.className = 'result error';
+                    resultContent.textContent = `Error ${response.status}: ${errorText}`;
+                }
+                
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                const resultDiv = document.getElementById('result');
+                const resultContent = document.getElementById('resultContent');
+                resultDiv.className = 'result error';
+                resultContent.textContent = error.toString();
+                resultDiv.style.display = 'block';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

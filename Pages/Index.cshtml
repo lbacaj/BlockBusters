@@ -1,0 +1,98 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Block Busters";
+}
+
+@Html.AntiForgeryToken()
+
+<!-- UI that appears above the game -->
+<div id="gameUI" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 2; pointer-events: none;">
+    <!-- Game title and messages -->
+    <div class="container" style="margin-top: 1rem;"> <!-- Replaced mt-3 with inline style -->
+        <div style="display: flex; flex-wrap: wrap;"> <!-- Replaced row with flexbox -->
+
+            <!-- Left side: Title & messages -->
+            <div style="flex: 0 0 60%; max-width: 60%;"> <!-- Replaced col-* with flex basis -->
+                <h2 style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); margin-bottom: 0.2rem;">
+                    Block Busters
+                </h2>
+                <div id="desktop-buttons" class="d-none d-sm-block"
+                     style="margin-bottom: 10px; pointer-events: auto;"></div>
+                <div id="messageArea"
+                     style="color: red; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.7);">
+                </div>
+            </div>
+
+            <!-- Right side: "by Louie" and jam button -->
+            <div id="topRightUIContent" style="flex: 0 0 40%; max-width: 40%; text-align: right;"> <!-- Replaced col-* and text-end, Added ID -->
+                <small style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+                              display: block; margin-bottom: 0.5rem;">
+                    by
+                    <a href="https://x.com/LBacaj" target="_blank"
+                       style="color: white; text-decoration: underline; pointer-events: auto;">
+                        Louie Bacaj
+                    </a>
+                </small>
+
+                <a target="_blank" href="https://jam.pieter.com"
+                   id="jamButton"
+                   style="font-family: 'system-ui', sans-serif;
+                          display: inline-block;
+                          padding: 5px 10px;
+                          margin-top: 5px;
+                          font-size: 14px;
+                          font-weight: bold;
+                          background: #fff;
+                          color: #000;
+                          text-decoration: none;
+                          border-radius: 12px;
+                          border: 1px solid #fff;
+                          pointer-events: auto;">
+                    🕹️ Vibe Jam 2025
+                </a>
+                <a target="_blank" href="https://github.com/lbacaj/BlockBusters"
+                   id="githubButton"
+                   style="font-family: 'system-ui', sans-serif;
+                          /* display: block; will be handled by CSS */
+                          padding: 5px 10px;
+                          margin-top: 8px; /* Added margin for spacing */
+                          font-size: 12px; /* Slightly smaller than Vibe Jam */
+                          font-weight: bold;
+                          background: #333; /* GitHub-like dark color */
+                          color: #fff;
+                          text-decoration: none;
+                          border-radius: 12px;
+                          border: 1px solid #555;
+                          pointer-events: auto;
+                          text-align: center;
+                          line-height: 1; /* For better SVG alignment */">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github" style="vertical-align: middle; margin-right: 4px;"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg> on GitHub
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- The Three.js canvas goes here -->
+<div id="gameContainer"></div>
+
+@section Scripts {
+    <!-- Load our puzzle logic as an ES module -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "/js/three.module.js"
+        }
+    }
+    </script>
+
+    <script type="module" src="~/js/blockpuzzle.js" asp-append-version="true"></script>
+    <script src="~/js/test-leaderboard.js" asp-append-version="true"></script>
+}
+
+<script type="module">
+    // Your big Three.js/game logic code goes here.
+    // ...
+</script>
